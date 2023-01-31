@@ -98,10 +98,15 @@ class ExampleUnitTest {
 
         every { bar.print(-1) } returns  true
         every { bar.print(eq(-1)) } returns  true
+        println(bar.print(-1))
     }
 
     @Test
     fun test5() {
+        val initSlot = slot<Int>()
+        every { bar.print(capture(initSlot)) } returns true
 
+        bar.print(123)
+        println("Capture arg:{${initSlot.captured}}")
     }
 }
