@@ -9,11 +9,25 @@ class TwoSlotTest {
     private val kzCheck = KzCheck(dataRepo)
 
     @Test
-    fun test() {
+    fun method1Easy() {
         val value1 = "value1"
         val value2 = "value2"
         every { dataRepo.setData(any(), any()) } just runs
         kzCheck.setData(value1, value2)
+        verify(exactly = 1) { dataRepo.setData(value1, value2) }
+        confirmVerified(dataRepo)
+    }
+
+    @Test
+    fun method2Slot() {
+        val value1 = "value1"
+        val value2 = "value2"
+        val value1Slot = slot<String>()
+        val value2Slot = slot<String>()
+
+        every { dataRepo.setData(capture(value1Slot),capture(value2Slot)) } just runs
+        kzCheck.setData(value1, value2)
+
         verify(exactly = 1) { dataRepo.setData(value1, value2) }
         confirmVerified(dataRepo)
     }
