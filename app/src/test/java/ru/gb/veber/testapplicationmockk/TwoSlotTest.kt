@@ -2,6 +2,7 @@ package ru.gb.veber.testapplicationmockk
 
 import io.mockk.*
 import org.junit.Test
+import java.lang.RuntimeException
 
 class TwoSlotTest {
     private val dataRepo: DataRepo = mockk()
@@ -26,6 +27,7 @@ class TwoSlotTest {
         val value2Slot = slot<String>()
 
         every { dataRepo.setData(capture(value1Slot),capture(value2Slot)) } just runs
+       // every { dataRepo.setData(capture(value1Slot),capture(value2Slot)) } throws (RuntimeException())
         kzCheck.setData(value1, value2)
 
         verify(exactly = 1) { dataRepo.setData(value1, value2) }
@@ -42,7 +44,7 @@ class DataRepo() {
         name = value1
         name2 = value2
     }
-    fun getData(): List<String> = listOf(name, name2)
+    fun getData(): Pair<String, String> = Pair(name,name2)
 }
 
 class KzCheck(private val dataRepo: DataRepo) {
